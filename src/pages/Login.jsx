@@ -20,11 +20,12 @@ export default class Login extends React.Component {
   }
 
   async handleClick() {
+    const { login } = this.state;
     this.setState({
       loading: true,
     });
     const response = await createUser(
-      { name: 'Name' },
+      { name: login },
     );
     if (response === 'OK') {
       this.setState({
