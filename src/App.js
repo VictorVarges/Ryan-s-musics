@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { Component } from 'react';
 import { BrowserRouter, Route, Switch } from 'react-router-dom';
 import Login from './pages/Login';
 import Search from './pages/Search';
@@ -8,13 +8,12 @@ import Profile from './pages/Profile';
 import ProfileEdit from './pages/ProfileEdit';
 import NotFound from './pages/NotFound';
 
-class App extends React.Component {
+class App extends Component {
   render() {
     return (
       <BrowserRouter>
         <Switch>
           <Route exact path="/" component={ Login } />
-          {/* by the moster, Silas, O grande! */}
           <Route path="/search" component={ Search } />
           <Route path="/album/:id" component={ Album } />
           <Route path="/favorites" component={ Favorites } />

@@ -22,7 +22,7 @@ export default class Search extends React.Component {
       showForm: true,
       loading: false,
       artist: '',
-      apiOk: false,
+      renderNameArtist: false,
     };
   }
 
@@ -38,10 +38,10 @@ export default class Search extends React.Component {
     this.setState({
       showForm: false,
       loading: true,
-      apiOk: false,
+      // renderNameArtist: false,
     });
     const searchAlbum = await searchAlbumsAPI(pesquisa);
-
+    console.log(searchAlbum);
     let artistOurBand = pesquisa;
     if (searchAlbum.length === 0) {
       artistOurBand = '';
@@ -53,7 +53,7 @@ export default class Search extends React.Component {
       albums: searchAlbum,
       loading: false,
       artist: artistOurBand,
-      apiOk: true,
+      renderNameArtist: true,
     });
   }
 
@@ -83,8 +83,8 @@ export default class Search extends React.Component {
 
   handleAPI() {
     const { artist } = this.state;
-    const { apiOk } = this.state;
-    if (apiOk === true) {
+    const { renderNameArtist } = this.state;
+    if (renderNameArtist === true) {
       if (artist !== '') {
         return (
           <p>
