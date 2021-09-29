@@ -65,18 +65,19 @@ export default class Album extends React.Component {
           </p>
         </section>
         <section>
-          <ul>
-            {musics.map((music, index) => {
-              if (index !== 0) {
-                return (
-                  <li key={ music.trackId }>
-                    <MusicCard eachmusic={ music } />
-                  </li>
-                );
-              }
-              return null;
-            })}
-          </ul>
+          {musics.map((music, index) => {
+            if (index !== 0) {
+              return (
+                <div key={ music.trackId }>
+                  <MusicCard
+                    eachmusic={ music }
+                    musicsalbum={ musics }
+                  />
+                </div>
+              );
+            }
+            return null;
+          })}
         </section>
       </div>
     );
@@ -84,6 +85,7 @@ export default class Album extends React.Component {
 }
 
 Album.propTypes = {
-  match: PropTypes.oneOf([
-    PropTypes.object]).isRequired,
+  match: PropTypes.objectOf(
+    PropTypes.any,
+  ).isRequired,
 };

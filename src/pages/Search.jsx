@@ -41,7 +41,6 @@ export default class Search extends React.Component {
       // renderNameArtist: false,
     });
     const searchAlbum = await searchAlbumsAPI(pesquisa);
-    console.log(searchAlbum);
     let artistOurBand = pesquisa;
     if (searchAlbum.length === 0) {
       artistOurBand = '';
