@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { addSong } from '../../services/favoriteSongsAPI';
+import { addSong, removeSong, getFavoriteSongs } from '../../services/favoriteSongsAPI';
 import Loading from './Loading';
 
 export default class MusicCard extends React.Component {
@@ -11,40 +11,54 @@ export default class MusicCard extends React.Component {
     this.definingChecked = this.definingChecked.bind(this);
 
     this.state = {
-      favoriteMusic: [],
       loading: false,
+      check: false,
     };
   }
 
-  definingChecked(check) {
-    const { favoriteMusic } = this.state;
-    const existSongs = favoriteMusic.some((existMusic) => existMusic.trackId === check);
-    if (existSongs) return true;
-    return false;
+  componentDidMount() {
+    this.hackToDidMount();
   }
 
-  async clickFavorites(event) {
-    const idCaptured = Number(event.target.value);
-    const { musicsalbum } = this.props;
-    const valueChecked = event.target.checked;
+  async hackToDidMount() {
+    const callFunction = await this.definingChecked();
+    this.setState({
+      check: callFunction,
+    });
+  }
 
-    const favoriteCaptured = musicsalbum.find((music) => music.trackId === idCaptured);
+  async definingChecked() {
+    const { eachmusic } = this.props;
+    const favoritesMusics = await getFavoriteSongs();
+    return favoritesMusics.some((music) => music.trackId === eachmusic.trackId);
+  }
 
+  async clickFavorites() {
+    const { eachmusic } = this.props;
     this.setState({
       loading: true,
     });
+    const valueChecked = await this.definingChecked();
+    // console.log('aa', eachmusic);
 
     if (valueChecked) {
-      await addSong(favoriteCaptured);
-      this.setState((prevState) => ({
-        favoriteMusic: [...prevState.favoriteMusic, favoriteCaptured],
+      await removeSong(eachmusic);
+      this.setState({
         loading: false,
-      }));
+        check: false,
+      });
+    } else {
+      await addSong(eachmusic);
+      this.setState({
+        loading: false,
+        check: true,
+      });
     }
   }
 
   renderCheckbox() {
     const { eachmusic } = this.props;
+    const { check } = this.state;
     return (
       <div>
         <audio data-testid="audio-component" src={ eachmusic.previewUrl } controls>
@@ -63,8 +77,8 @@ export default class MusicCard extends React.Component {
             <input
               type="checkbox"
               value={ eachmusic.trackId }
-              defaultChecked={ this.definingChecked(eachmusic.trackId) }
-              onClick={ this.clickFavorites }
+              checked={ check }
+              onChange={ this.clickFavorites }
               data-testid={ `checkbox-music-${eachmusic.trackId}` }
             />
           </label>
