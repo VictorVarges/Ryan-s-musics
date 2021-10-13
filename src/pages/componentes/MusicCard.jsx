@@ -35,6 +35,7 @@ export default class MusicCard extends React.Component {
 
   async clickFavorites() {
     const { eachmusic } = this.props;
+    const { fetchFavoriteSongs } = this.props;
     this.setState({
       loading: true,
     });
@@ -43,6 +44,7 @@ export default class MusicCard extends React.Component {
 
     if (valueChecked) {
       await removeSong(eachmusic);
+      await fetchFavoriteSongs();
       this.setState({
         loading: false,
         check: false,
@@ -71,7 +73,7 @@ export default class MusicCard extends React.Component {
         </p>
         <form>
           <label
-            htmlFor="favorita"
+            htmlFor={ `checkbox-music-${eachmusic.trackId}` }
           >
             Favorita
             <input
@@ -80,6 +82,7 @@ export default class MusicCard extends React.Component {
               checked={ check }
               onChange={ this.clickFavorites }
               data-testid={ `checkbox-music-${eachmusic.trackId}` }
+              id={ `checkbox-music-${eachmusic.trackId}` }
             />
           </label>
         </form>
@@ -88,9 +91,7 @@ export default class MusicCard extends React.Component {
   }
 
   render() {
-    const { musicsalbum } = this.props;
     const { loading } = this.state;
-    if (musicsalbum.length === 0) return <Loading />;
     return (
       loading ? <Loading /> : this.renderCheckbox()
     );
@@ -99,5 +100,5 @@ export default class MusicCard extends React.Component {
 
 MusicCard.propTypes = {
   eachmusic: PropTypes.objectOf(PropTypes.any).isRequired,
-  musicsalbum: PropTypes.arrayOf(PropTypes.object).isRequired,
+  fetchFavoriteSongs: PropTypes.func.isRequired,
 };

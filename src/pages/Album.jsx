@@ -71,7 +71,6 @@ export default class Album extends React.Component {
                 <div key={ music.trackId }>
                   <MusicCard
                     eachmusic={ music }
-                    musicsalbum={ musics }
                   />
                 </div>
               );

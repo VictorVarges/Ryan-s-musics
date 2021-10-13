@@ -1,17 +1,59 @@
 import React from 'react';
+
+import { getFavoriteSongs } from '../services/favoriteSongsAPI';
 import Header from './componentes/Header';
-// import Loading from '../components/Loading';
-// import MusicCard from '../components/MusicCard';
-// import { getFavoriteSongs, removeSong } from '../services/favoriteSongsAPI';
+import Loading from './componentes/Loading';
+import MusicCard from './componentes/MusicCard';
 
 export default class Favorites extends React.Component {
-  render() {
+  constructor() {
+    super();
+    this.state = {
+      loading: true,
+    };
+    this.fetchFavoriteSongs = this.fetchFavoriteSongs.bind(this);
+    this.renderFavorites = this.renderFavorites.bind(this);
+  }
+
+  componentDidMount() {
+    this.fetchFavoriteSongs();
+  }
+
+  async fetchFavoriteSongs(action) {
+    if (action) {
+      this.setState({
+        loading: true,
+      });
+    }
+    const favoritesSongs = await getFavoriteSongs();
+    this.setState({
+      loading: false,
+      favoritesSongs,
+    });
+  }
+
+  renderFavorites() {
+    const { favoritesSongs } = this.state;
     return (
-      <div
-        data-testid="page-favorites"
-      >
+      <div>
+        {favoritesSongs.map((favoriteMusic) => (
+          <div key={ favoriteMusic.trackId }>
+            <MusicCard
+              eachmusic={ favoriteMusic }
+              fetchFavoriteSongs={ this.fetchFavoriteSongs }
+            />
+          </div>
+        ))}
+      </div>
+    );
+  }
+
+  render() {
+    const { loading } = this.state;
+    return (
+      <div data-testid="page-favorites">
         <Header />
-        <p>Teste</p>
+        {(loading) ? <Loading /> : this.renderFavorites()}
       </div>
     );
   }
