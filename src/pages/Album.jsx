@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import getMusics from '../services/musicsAPI';
 import Header from './componentes/Header';
 import MusicCard from './componentes/MusicCard';
+import Loading from './componentes/Loading';
 
 export default class Album extends React.Component {
   constructor() {
@@ -16,19 +17,18 @@ export default class Album extends React.Component {
       coverFrontAlbum: '',
       albumName: '',
       musics: [],
+      loading: false,
     };
   }
 
   componentDidMount() {
     this.handleGetMusics();
   }
-  // handleChangeMusics(event) {
-  //   this.setState({
-  //     musics: event.target.value,
-  //   });
-  // }
 
   async handleGetMusics() {
+    this.setState({
+      loading: true,
+    });
     const {
       match: {
         params: { id },
@@ -40,45 +40,50 @@ export default class Album extends React.Component {
       coverFrontAlbum: requestMusicsApi[0].artworkUrl100,
       albumName: requestMusicsApi[0].collectionName,
       musics: requestMusicsApi,
+      loading: false,
     });
   }
 
   render() {
-    const { artistName, coverFrontAlbum, albumName, musics } = this.state;
+    const { artistName, coverFrontAlbum, albumName, musics, loading } = this.state;
     return (
-      <div data-testid="page-album">
-        <Header />
-        <section>
-          <img
-            alt="coverAlbum"
-            src={ coverFrontAlbum }
-          />
-          <p
-            data-testid="album-name"
-          >
-            {albumName}
-          </p>
-          <p
-            data-testid="artist-name"
-          >
-            {artistName}
-          </p>
-        </section>
-        <section>
-          {musics.map((music, index) => {
-            if (index !== 0) {
-              return (
-                <div key={ music.trackId }>
-                  <MusicCard
-                    eachmusic={ music }
-                  />
-                </div>
-              );
-            }
-            return null;
-          })}
-        </section>
-      </div>
+      loading
+        ? <Loading />
+        : (
+          <div data-testid="page-album">
+            <Header />
+            <section>
+              <img
+                alt="coverAlbum"
+                src={ coverFrontAlbum }
+              />
+              <p
+                data-testid="album-name"
+              >
+                {albumName}
+              </p>
+              <p
+                data-testid="artist-name"
+              >
+                {artistName}
+              </p>
+            </section>
+            <section>
+              {musics.map((music, index) => {
+                if (index !== 0) {
+                  return (
+                    <div key={ music.trackId }>
+                      <MusicCard
+                        eachmusic={ music }
+                      />
+                    </div>
+                  );
+                }
+                return null;
+              })}
+            </section>
+          </div>
+        )
     );
   }
 }

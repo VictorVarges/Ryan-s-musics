@@ -34,8 +34,7 @@ export default class MusicCard extends React.Component {
   }
 
   async clickFavorites() {
-    const { eachmusic } = this.props;
-    const { fetchFavoriteSongs } = this.props;
+    const { eachmusic, fetchFavoriteSongs } = this.props;
     this.setState({
       loading: true,
     });
@@ -100,5 +99,8 @@ export default class MusicCard extends React.Component {
 
 MusicCard.propTypes = {
   eachmusic: PropTypes.objectOf(PropTypes.any).isRequired,
-  fetchFavoriteSongs: PropTypes.func.isRequired,
+  fetchFavoriteSongs: PropTypes.func,
+};
+MusicCard.defaultProps = {
+  fetchFavoriteSongs: () => {},
 };

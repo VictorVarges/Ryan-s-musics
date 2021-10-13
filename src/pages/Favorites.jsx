@@ -19,13 +19,12 @@ export default class Favorites extends React.Component {
     this.fetchFavoriteSongs();
   }
 
-  async fetchFavoriteSongs(action) {
-    if (action) {
-      this.setState({
-        loading: true,
-      });
-    }
+  async fetchFavoriteSongs() {
+    this.setState({
+      loading: true,
+    });
     const favoritesSongs = await getFavoriteSongs();
+    console.log(favoritesSongs);
     this.setState({
       loading: false,
       favoritesSongs,
